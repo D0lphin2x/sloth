@@ -3,6 +3,17 @@
 <head>
     <title>Search Results</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .returns-table {
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        .returns-table td, .returns-table th {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+    </style>
     <script>
         function hideLoading() {
             document.getElementById('loading').style.display = 'none';
@@ -19,8 +30,34 @@
         <li>{{ sector }}</li>
         {% endfor %}
     </ul>
+    
+    <h2>Performance Metrics:</h2>
+    <table class="returns-table">
+        <tr>
+            <th>Period</th>
+            <th>Annualized Return</th>
+        </tr>
+        <tr>
+            <td>1 Year</td>
+            <td>{{ "%.2f"|format(annual_returns['1_year']) }}%</td>
+        </tr>
+        <tr>
+            <td>3 Year</td>
+            <td>{{ "%.2f"|format(annual_returns['3_year']) }}%</td>
+        </tr>
+        <tr>
+            <td>5 Year</td>
+            <td>{{ "%.2f"|format(annual_returns['5_year']) }}%</td>
+        </tr>
+        <tr>
+            <td>10 Year</td>
+            <td>{{ "%.2f"|format(annual_returns['10_year']) }}%</td>
+        </tr>
+    </table>
+
     <h2>Sharpe Ratio:</h2>
-    <p>{{ sharpe_ratio }}</p>
+    <p>{{ "%.2f"|format(sharpe_ratio) }}</p>
+    
     <a href="/">Back to Search</a>
 </body>
 </html>
