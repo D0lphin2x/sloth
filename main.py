@@ -29,9 +29,37 @@ def search():
     # Get both metrics
     sharpe_ratio, annual_returns = calculate_performance(filtered_data)
 
+    # Ensure 'Date' column is in datetime format and strip time component
+    filtered_data['Date'] = pd.to_datetime(filtered_data['Date']).dt.date
+
+    # Debugging step: Print the first few rows of the filtered data
+    print(filtered_data.head())
+
+    # Calculate daily average prices
+    filtered_data = filtered_data.sort_values(['Date'])
+    daily_prices = filtered_data.groupby('Date')['Close'].mean()
+
+    # Convert dates to strings for rendering
+    daily_prices.index = daily_prices.index.astype(str)
+
+    # Debugging step: Print the daily prices
+    print(daily_prices.head())
+
+    # Ensure all variables are defined
+    if selected_sectors is None:
+        selected_sectors = []
+    if sharpe_ratio is None:
+        sharpe_ratio = 0.0
+    if annual_returns is None:
+        annual_returns = {}
+    if daily_prices is None:
+        daily_prices = {}
+
     return render_template('results.html',
                          selected_sectors=selected_sectors,
                          sharpe_ratio=sharpe_ratio,
-                         annual_returns=annual_returns)
+                         annual_returns=annual_returns,
+                         daily_prices=daily_prices.to_dict())
+
 if __name__ == '__main__':
-    app.run(debug=True, port = 5001)
+    app.run(debug=True, port=5001)

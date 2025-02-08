@@ -93,3 +93,32 @@ button:hover {
     50% { background-color: #d0d0d0; }
     100% { background-color: #e0e0e0; }
 }
+
+/* Container styles */
+.container {
+    display: flex;
+}
+
+.results-section {
+    flex: 2;
+}
+
+.graph-section {
+    flex: 1;
+    margin-left: 20px;
+    background-color: #f0f0f0; /* Set a solid background color */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Table styles */
+.returns-table {
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+
+.returns-table td, .returns-table th {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}

@@ -1,9 +1,23 @@
+<!-- filepath: /c:/Duke/haccckduke/sloth/templates/results.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>Search Results</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
     <style>
+        .container {
+            display: flex;
+        }
+        .results-section {
+            flex: 2;
+        }
+        .graph-section {
+            flex: 1;
+            margin-left: 20px;
+            background-color: #f0f0f0; /* Set a solid background color */
+            padding: 20px;
+            border-radius: 8px;
+        }
         .returns-table {
             margin: 20px 0;
             border-collapse: collapse;
@@ -14,6 +28,7 @@
             text-align: left;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function hideLoading() {
             document.getElementById('loading').style.display = 'none';
@@ -23,41 +38,80 @@
 </head>
 <body>
     <div id="loading">Loading...</div>
-    <h1>Search Results</h1>
-    <h2>Selected Sectors:</h2>
-    <ul>
-        {% for sector in selected_sectors %}
-        <li>{{ sector }}</li>
-        {% endfor %}
-    </ul>
-    
-    <h2>Performance Metrics:</h2>
-    <table class="returns-table">
-        <tr>
-            <th>Period</th>
-            <th>Annualized Return</th>
-        </tr>
-        <tr>
-            <td>1 Year</td>
-            <td>{{ "%.2f"|format(annual_returns['1_year']) }}%</td>
-        </tr>
-        <tr>
-            <td>3 Year</td>
-            <td>{{ "%.2f"|format(annual_returns['3_year']) }}%</td>
-        </tr>
-        <tr>
-            <td>5 Year</td>
-            <td>{{ "%.2f"|format(annual_returns['5_year']) }}%</td>
-        </tr>
-        <tr>
-            <td>10 Year</td>
-            <td>{{ "%.2f"|format(annual_returns['10_year']) }}%</td>
-        </tr>
-    </table>
+    <div class="container">
+        <div class="results-section">
+            <h1>Search Results</h1>
+            <h2>Selected Sectors:</h2>
+            <ul>
+                {% for sector in selected_sectors %}
+                <li>{{ sector }}</li>
+                {% endfor %}
+            </ul>
+            
+            <h2>Performance Metrics:</h2>
+            <table class="returns-table">
+                <tr>
+                    <th>Period</th>
+                    <th>Annualized Return</th>
+                </tr>
+                <tr>
+                    <td>1 Year</td>
+                    <td>{{ "%.2f"|format(annual_returns['1_year']) }}%</td>
+                </tr>
+                <tr>
+                    <td>3 Year</td>
+                    <td>{{ "%.2f"|format(annual_returns['3_year']) }}%</td>
+                </tr>
+                <tr>
+                    <td>5 Year</td>
+                    <td>{{ "%.2f"|format(annual_returns['5_year']) }}%</td>
+                </tr>
+                <tr>
+                    <td>10 Year</td>
+                    <td>{{ "%.2f"|format(annual_returns['10_year']) }}%</td>
+                </tr>
+            </table>
 
-    <h2>Sharpe Ratio:</h2>
-    <p>{{ "%.2f"|format(sharpe_ratio) }}</p>
-    
-    <a href="/">Back to Search</a>
+            <h2>Sharpe Ratio:</h2>
+            <p>{{ "%.2f"|format(sharpe_ratio) }}</p>
+            
+            <a href="/">Back to Search</a>
+        </div>
+        <div class="graph-section">
+            <h2>Daily Average Price Graph</h2>
+            <canvas id="daily-prices-chart" width="400" height="400"></canvas>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            hideLoading();
+
+            const ctx = document.getElementById('daily-prices-chart').getContext('2d');
+            const labels = Object.keys({{ daily_prices|tojson }});
+            const dataPoints = Object.values({{ daily_prices|tojson }});
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Daily Average Prices',
+                        data: dataPoints,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
+    </script>
 </body>
 </html>
