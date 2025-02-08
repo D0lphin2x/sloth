@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import requests
+from calculate_sharpe_ratio import calculate_sharpe_ratios
 
 app = Flask(__name__)
 
@@ -13,17 +14,20 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
-    std_dev_min = request.form.get('std_dev_min')
-    std_dev_max = request.form.get('std_dev_max')
+    sharpe_ratio_min = float(request.form.get('sharpe_ratio_min'))
+    sharpe_ratio_max = float(request.form.get('sharpe_ratio_max'))
 
     # Fetch data from the API
     response = requests.get(API_ENDPOINT, headers={"Authorization": f"Bearer {API_KEY}"})
     data = response.json()
 
-    # Filter data based on standard deviation criteria
+    # Calculate Sharpe ratios
+    data_with_sharpe_ratios = calculate_sharpe_ratios(data)
+
+    # Filter data based on Sharpe ratio criteria
     filtered_data = [
-        fund for fund in data
-        if std_dev_min <= fund['standard_deviation'] <= std_dev_max
+        fund for fund in data_with_sharpe_ratios
+        if sharpe_ratio_min <= fund['sharpe_ratio'] <= sharpe_ratio_max
     ]
 
     return render_template('results.html', funds=filtered_data)
