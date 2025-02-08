@@ -1,12 +1,11 @@
 from flask import Flask, request, render_template
-import requests
-from calculate_sharpe_ratio import calculate_sharpe_ratios
+import pandas as pd
 
 app = Flask(__name__)
 
-# Replace with the actual API endpoint and your API key
-API_ENDPOINT = "https://api.example.com/index-funds"
-API_KEY = "your_api_key"
+# Load sector mapping from CSV file
+sector_df = pd.read_csv('snp500.csv')
+sector_mapping = dict(zip(sector_df['Symbol'], sector_df['GICS Sector']))
 
 @app.route('/')
 def index():
@@ -14,24 +13,21 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
-    sharpe_ratio_min = float(request.form.get('sharpe_ratio_min'))
-    sharpe_ratio_max = float(request.form.get('sharpe_ratio_max'))
     selected_sectors = request.form.getlist('sectors')
 
-    # Fetch data from the API
-    response = requests.get(API_ENDPOINT, headers={"Authorization": f"Bearer {API_KEY}"})
-    data = response.json()
+    # Read data from the CSV file
+    df = pd.read_csv('updated_stocks_data.csv')
 
-    # Calculate Sharpe ratios
-    data_with_sharpe_ratios = calculate_sharpe_ratios(data)
+    # Map tickers to sectors
+    df['sector'] = df['Ticker'].map(sector_mapping)
 
-    # Filter data based on Sharpe ratio and sector criteria
-    filtered_data = [
-        fund for fund in data_with_sharpe_ratios
-        if sharpe_ratio_min <= fund['sharpe_ratio'] <= sharpe_ratio_max and fund['sector'] in selected_sectors
-    ]
+    # Filter data based on selected sectors
+    filtered_data = df[df['sector'].isin(selected_sectors)]
 
-    return render_template('results.html', funds=filtered_data, selected_sectors=selected_sectors)
+    # Calculate the daily average closing price for each sector
+    average_prices = filtered_data.groupby(['Date', 'sector'])['Close'].mean().reset_index()
+
+    return render_template('results.html', average_prices=average_prices, selected_sectors=selected_sectors)
 
 if __name__ == '__main__':
     app.run(debug=True)

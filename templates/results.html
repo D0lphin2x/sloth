@@ -11,14 +11,12 @@
         <li>{{ sector }}</li>
         {% endfor %}
     </ul>
-    <h2>Funds:</h2>
+    <h2>Daily Average Closing Prices:</h2>
     <ul>
-        {% for fund in funds %}
+        {% for row in average_prices %}
         <li>
-            <h3>{{ fund.name }}</h3>
-            <p>Sector: {{ fund.sector }}</p>
-            <p>Sharpe Ratio: {{ fund.sharpe_ratio }}</p>
-            <p>Summary: {{ fund.summary }}</p>
+            <h3>{{ row.Date }} - {{ row.sector }}</h3>
+            <p>Average Closing Price: {{ row.Close }}</p>
         </li>
         {% endfor %}
     </ul>
