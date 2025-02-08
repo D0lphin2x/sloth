@@ -1,7 +1,7 @@
 /* General styles */
 body {
     font-family: Arial, sans-serif;
-    background: url(static\OIP.jpg) no-repeat center center fixed;
+    background: url('/static/OIP.jpg') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     padding: 0;
@@ -12,7 +12,7 @@ body {
 /* Header styles */
 h1 {
     text-align: center;
-    color: #fff;
+    color: #043c04;
     margin-top: 20px;
 }
 
