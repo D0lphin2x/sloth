@@ -25,19 +25,12 @@ def search():
     # Filter data based on selected sectors
     filtered_data = df[df['sector'].isin(selected_sectors)]
 
-    # Calculate the daily average closing price for each sector
-    average_prices = filtered_data.groupby(['Date', 'sector'])['Close'].mean().reset_index()
-
-    # Calculate the combined daily average closing prices
-    combined_daily_averages = average_prices.groupby('Date')['Close'].mean().reset_index()
-
     # Calculate the Sharpe ratio
-    sharpe_ratio = calculate_sharpe_ratio(combined_daily_averages)
+    sharpe_ratio = calculate_sharpe_ratio(filtered_data)
 
     # Debug prints
     print("Selected Sectors:", selected_sectors)
     print("Filtered Data:\n", filtered_data.head())
-    print("Combined Daily Averages:\n", combined_daily_averages.head())
     print("Sharpe Ratio:", sharpe_ratio)
 
     return render_template('results.html', selected_sectors=selected_sectors, sharpe_ratio=sharpe_ratio)
