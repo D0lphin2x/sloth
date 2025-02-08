@@ -1,12 +1,10 @@
-def calculate_sharpe_ratios(data):
-    for fund in data:
-        # Assuming the API provides 'returns' and 'risk_free_rate' for each fund
-        returns = fund['returns']
-        risk_free_rate = fund['risk_free_rate']
-        standard_deviation = fund['standard_deviation']
+import numpy as np
 
-        # Calculate the Sharpe ratio
-        sharpe_ratio = (returns - risk_free_rate) / standard_deviation
-        fund['sharpe_ratio'] = sharpe_ratio
+def calculate_sharpe_ratio(average_prices, risk_free_rate=0.04495):
+    daily_returns = average_prices['Close'].pct_change().dropna()
+    mean_return = daily_returns.mean()
+    std_dev = daily_returns.std()
 
-    return data
+    # Calculate the Sharpe ratio
+    sharpe_ratio = (mean_return - risk_free_rate/252) / std_dev
+    return sharpe_ratio

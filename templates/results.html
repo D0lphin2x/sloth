@@ -11,15 +11,8 @@
         <li>{{ sector }}</li>
         {% endfor %}
     </ul>
-    <h2>Daily Average Closing Prices:</h2>
-    <ul>
-        {% for row in average_prices %}
-        <li>
-            <h3>{{ row.Date }} - {{ row.sector }}</h3>
-            <p>Average Closing Price: {{ row.Close }}</p>
-        </li>
-        {% endfor %}
-    </ul>
+    <h2>Sharpe Ratio:</h2>
+    <p>{{ sharpe_ratio }}</p>
     <a href="/">Back to Search</a>
 </body>
 </html>
