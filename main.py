@@ -16,6 +16,7 @@ def index():
 def search():
     sharpe_ratio_min = float(request.form.get('sharpe_ratio_min'))
     sharpe_ratio_max = float(request.form.get('sharpe_ratio_max'))
+    selected_sectors = request.form.getlist('sectors')
 
     # Fetch data from the API
     response = requests.get(API_ENDPOINT, headers={"Authorization": f"Bearer {API_KEY}"})
@@ -24,13 +25,13 @@ def search():
     # Calculate Sharpe ratios
     data_with_sharpe_ratios = calculate_sharpe_ratios(data)
 
-    # Filter data based on Sharpe ratio criteria
+    # Filter data based on Sharpe ratio and sector criteria
     filtered_data = [
         fund for fund in data_with_sharpe_ratios
-        if sharpe_ratio_min <= fund['sharpe_ratio'] <= sharpe_ratio_max
+        if sharpe_ratio_min <= fund['sharpe_ratio'] <= sharpe_ratio_max and fund['sector'] in selected_sectors
     ]
 
-    return render_template('results.html', funds=filtered_data)
+    return render_template('results.html', funds=filtered_data, selected_sectors=selected_sectors)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -5,10 +5,17 @@
 </head>
 <body>
     <h1>Search Results</h1>
+    <h2>Selected Sectors:</h2>
+    <ul>
+        {% for sector in selected_sectors %}
+        <li>{{ sector }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Funds:</h2>
     <ul>
         {% for fund in funds %}
         <li>
-            <h2>{{ fund.name }}</h2>
+            <h3>{{ fund.name }}</h3>
             <p>Sector: {{ fund.sector }}</p>
             <p>Sharpe Ratio: {{ fund.sharpe_ratio }}</p>
             <p>Summary: {{ fund.summary }}</p>
