@@ -2,8 +2,16 @@
 <html>
 <head>
     <title>Search Results</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        window.onload = hideLoading;
+    </script>
 </head>
 <body>
+    <div id="loading">Loading...</div>
     <h1>Search Results</h1>
     <h2>Selected Sectors:</h2>
     <ul>

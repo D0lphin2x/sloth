@@ -2,35 +2,62 @@
 <html>
 <head>
     <title>Index Fund Search</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+        function changeAnimation() {
+            var body = document.body;
+            if (window.scrollY > 100) {
+                body.style.animation = 'backgroundAnimation2 10s infinite';
+            } else {
+                body.style.animation = 'backgroundAnimation1 10s infinite';
+            }
+        }
+        window.onscroll = changeAnimation;
+    </script>
 </head>
 <body>
+    <div id="loading">Loading...</div>
     <h1>Search for Index Funds</h1>
-    <form action="/search" method="post">
+    <form action="/search" method="post" onsubmit="showLoading()">
         <label>Sectors:</label>
         <br>
-        <input type="checkbox" name="sectors" value="Technology"> Technology
+        <input type="checkbox" id="tech" name="sectors" value="Technology">
+        <label for="tech">Technology</label>
         <br>
-        <input type="checkbox" name="sectors" value="Health Care"> Health Care
+        <input type="checkbox" id="health" name="sectors" value="Health Care">
+        <label for="health">Health Care</label>
         <br>
-        <input type="checkbox" name="sectors" value="Financials"> Financials
+        <input type="checkbox" id="financials" name="sectors" value="Financials">
+        <label for="financials">Financials</label>
         <br>
-        <input type="checkbox" name="sectors" value="Real Estate"> Real Estate
+        <input type="checkbox" id="realestate" name="sectors" value="Real Estate">
+        <label for="realestate">Real Estate</label>
         <br>
-        <input type="checkbox" name="sectors" value="Energy"> Energy
+        <input type="checkbox" id="energy" name="sectors" value="Energy">
+        <label for="energy">Energy</label>
         <br>
-        <input type="checkbox" name="sectors" value="Materials"> Materials
+        <input type="checkbox" id="materials" name="sectors" value="Materials">
+        <label for="materials">Materials</label>
         <br>
-        <input type="checkbox" name="sectors" value="Consumer Discretionary"> Consumer Discretionary
+        <input type="checkbox" id="consumerdiscretionary" name="sectors" value="Consumer Discretionary">
+        <label for="consumerdiscretionary">Consumer Discretionary</label>
         <br>
-        <input type="checkbox" name="sectors" value="Industrials"> Industrials
+        <input type="checkbox" id="industrials" name="sectors" value="Industrials">
+        <label for="industrials">Industrials</label>
         <br>
-        <input type="checkbox" name="sectors" value="Utilities"> Utilities
+        <input type="checkbox" id="utilities" name="sectors" value="Utilities">
+        <label for="utilities">Utilities</label>
         <br>
-        <input type="checkbox" name="sectors" value="Consumer Staples"> Consumer Staples
+        <input type="checkbox" id="consumerstaples" name="sectors" value="Consumer Staples">
+        <label for="consumerstaples">Consumer Staples</label>
         <br>
-        <input type="checkbox" name="sectors" value="Communications"> Communications
+        <input type="checkbox" id="communications" name="sectors" value="Communications">
+        <label for="communications">Communications</label>
         <br>
-        <button type="submit">Search</button>
+        <button type="submit">Enter</button>
     </form>
 </body>
 </html>
