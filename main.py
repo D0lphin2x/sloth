@@ -25,15 +25,19 @@ def search():
     # Filter data based on selected sectors
     filtered_data = df[df['sector'].isin(selected_sectors)]
 
-    # Calculate the Sharpe ratio
+    # Load market cap data from New_SNP500.csv
+    sector_df = pd.read_csv('New_SNP500.csv')
+    market_cap_mapping = dict(zip(sector_df['Symbol'], sector_df['Market Cap']))
+    
+    # Add market cap to filtered_data
+    filtered_data['Market Cap'] = filtered_data['Ticker'].map(market_cap_mapping)
+
+    # Drop rows where Market Cap is NaN (if any ticker isn't in New_SNP500.csv)
+    filtered_data = filtered_data.dropna(subset=['Market Cap'])
+
+    # Calculate the Sharpe ratio with market cap weighting
     sharpe_ratio = calculate_sharpe_ratio(filtered_data)
 
-    # Debug prints
-    print("Selected Sectors:", selected_sectors)
-    print("Filtered Data:\n", filtered_data.head())
-    print("Sharpe Ratio:", sharpe_ratio)
-
     return render_template('results.html', selected_sectors=selected_sectors, sharpe_ratio=sharpe_ratio)
-
 if __name__ == '__main__':
     app.run(debug=True)
