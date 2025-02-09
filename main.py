@@ -42,6 +42,9 @@ def search():
     # Calculate portfolio-level Sharpe ratio and annual returns
     sharpe_ratio, annual_returns = calculate_performance(filtered_data)
 
+    # Calculate Sharpe ratios for individual companies
+    company_sharpe_ratios = filtered_data.groupby('Ticker').apply(lambda x: calculate_performance(x)[0])
+
     # Ensure 'Date' column is in datetime format and strip time component
     filtered_data['Date'] = pd.to_datetime(filtered_data['Date']).dt.date
 
@@ -69,7 +72,8 @@ def search():
                          selected_sectors=selected_sectors,
                          sharpe_ratio=sharpe_ratio,
                          annual_returns=annual_returns,
-                         daily_prices=daily_prices.to_dict())
+                         daily_prices=daily_prices.to_dict(),
+                         company_sharpe_ratios=company_sharpe_ratios.to_dict())
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

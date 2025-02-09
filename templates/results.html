@@ -1,4 +1,3 @@
-<!-- filepath: /c:/Duke/haccckduke/sloth/templates/results.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -47,6 +46,17 @@
 
             <h2>Sharpe Ratio:</h2>
             <p>{{ "%.2f"|format(sharpe_ratio) }}</p>
+
+            <h2>Company Sharpe Ratios:</h2>
+            <div class="scrollable-list">
+                <ul>
+                    {% for company, ratio in company_sharpe_ratios.items() %}
+                    <li>{{ company }}: {{ "%.2f"|format(ratio) }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <p class="info-link" onclick="showInfo()">i</p>
         </div>
         <div class="graph-section">
             <h2>Daily Average Price Graph</h2>
@@ -81,6 +91,10 @@
                 }
             });
         };
+
+        function showInfo() {
+            alert("Information about Sharpe ratios and how they are calculated.");
+        }
     </script>
 </body>
 </html>

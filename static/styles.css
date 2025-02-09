@@ -118,3 +118,14 @@ body {
 .about-block:hover {
     background-color: #45a049;
 }
+
+.scrollable-list {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.info-link {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
