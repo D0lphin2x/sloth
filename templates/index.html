@@ -1,63 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Index Fund Search</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .sector-button {
+            background-color: #2F4F4F; /* Gunmetal gray */
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        .sector-button:hover {
+            transform: scale(1.1);
+        }
+        .sector-button.selected {
+            background-color: rgb(25, 155, 25); /* Light greenish */
+        }
+        .sectors-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
     <script>
-        function showLoading() {
-            document.getElementById('loading').style.display = 'block';
+        function toggleSelection(button) {
+            button.classList.toggle('selected');
         }
-        function changeAnimation() {
-            var body = document.body;
-            if (window.scrollY > 100) {
-                body.style.animation = 'backgroundAnimation2 10s infinite';
-            } else {
-                body.style.animation = 'backgroundAnimation1 10s infinite';
-            }
-        }
-        window.onscroll = changeAnimation;
     </script>
 </head>
 <body>
-    <div id="loading">Loading...</div>
-    <h1>Search for Index Funds</h1>
-    <form action="/search" method="post" onsubmit="showLoading()">
-        <label>Sectors:</label>
-        <br>
-        <input type="checkbox" id="tech" name="sectors" value="Technology">
-        <label for="tech">Technology</label>
-        <br>
-        <input type="checkbox" id="health" name="sectors" value="Health Care">
-        <label for="health">Health Care</label>
-        <br>
-        <input type="checkbox" id="financials" name="sectors" value="Financials">
-        <label for="financials">Financials</label>
-        <br>
-        <input type="checkbox" id="realestate" name="sectors" value="Real Estate">
-        <label for="realestate">Real Estate</label>
-        <br>
-        <input type="checkbox" id="energy" name="sectors" value="Energy">
-        <label for="energy">Energy</label>
-        <br>
-        <input type="checkbox" id="materials" name="sectors" value="Materials">
-        <label for="materials">Materials</label>
-        <br>
-        <input type="checkbox" id="consumerdiscretionary" name="sectors" value="Consumer Discretionary">
-        <label for="consumerdiscretionary">Consumer Discretionary</label>
-        <br>
-        <input type="checkbox" id="industrials" name="sectors" value="Industrials">
-        <label for="industrials">Industrials</label>
-        <br>
-        <input type="checkbox" id="utilities" name="sectors" value="Utilities">
-        <label for="utilities">Utilities</label>
-        <br>
-        <input type="checkbox" id="consumerstaples" name="sectors" value="Consumer Staples">
-        <label for="consumerstaples">Consumer Staples</label>
-        <br>
-        <input type="checkbox" id="communications" name="sectors" value="Communications">
-        <label for="communications">Communications</label>
-        <br>
-        <button type="submit">Enter</button>
-    </form>
+    <div class="navbar">
+        <a href="/">Home</a>
+    </div>
+    <div class="container">
+        <h1>Calculator</h1>
+        <form action="/search" method="post">
+            <div class="sectors-container">
+                <!-- Add options dynamically -->
+                {% for sector in sectors %}
+                <button type="button" class="sector-button" onclick="toggleSelection(this)">{{ sector }}</button>
+                {% endfor %}
+            </div>
+            <input type="hidden" name="sectors" id="sectors">
+            <button type="submit" onclick="collectSelectedSectors()">Search</button>
+        </form>
+    </div>
+    <script>
+        function collectSelectedSectors() {
+            const selectedButtons = document.querySelectorAll('.sector-button.selected');
+            const selectedSectors = Array.from(selectedButtons).map(button => button.textContent);
+            document.getElementById('sectors').value = selectedSectors.join(',');
+        }
+    </script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 import pandas as pd
+import numpy as np
 from calculate_sharpe_ratio import calculate_performance
 
 app = Flask(__name__)
@@ -8,13 +9,25 @@ app = Flask(__name__)
 sector_df = pd.read_csv('snp500.csv')
 sector_mapping = dict(zip(sector_df['Symbol'], sector_df['GICS Sector']))
 
+# Define the sectors to be displayed
+display_sectors = [
+    "Technology", "Health Care", "Financials", "Real Estate", "Energy",
+    "Materials", "Consumer Discretionary", "Industrials", "Utilities",
+    "Consumer Staples", "Communications"
+]
+
 @app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/index')
 def index():
-    return render_template('index.html')
+    sectors = display_sectors
+    return render_template('index.html', sectors=sectors)
 
 @app.route('/search', methods=['POST'])
 def search():
-    selected_sectors = request.form.getlist('sectors')
+    selected_sectors = request.form.get('sectors').split(',')
     
     df = pd.read_csv('updated_stocks_data.csv')
     df['sector'] = df['Ticker'].map(sector_mapping)
@@ -26,14 +39,11 @@ def search():
     filtered_data['Market Cap'] = filtered_data['Ticker'].map(market_cap_mapping)
     filtered_data = filtered_data.dropna(subset=['Market Cap'])
 
-    # Get both metrics
+    # Calculate portfolio-level Sharpe ratio and annual returns
     sharpe_ratio, annual_returns = calculate_performance(filtered_data)
 
     # Ensure 'Date' column is in datetime format and strip time component
     filtered_data['Date'] = pd.to_datetime(filtered_data['Date']).dt.date
-
-    # Debugging step: Print the first few rows of the filtered data
-    print(filtered_data.head())
 
     # Calculate daily average prices
     filtered_data = filtered_data.sort_values(['Date'])

@@ -4,40 +4,13 @@
 <head>
     <title>Search Results</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        .container {
-            display: flex;
-        }
-        .results-section {
-            flex: 2;
-        }
-        .graph-section {
-            flex: 1;
-            margin-left: 20px;
-            background-color: #f0f0f0; /* Set a solid background color */
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .returns-table {
-            margin: 20px 0;
-            border-collapse: collapse;
-        }
-        .returns-table td, .returns-table th {
-            padding: 8px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-        window.onload = hideLoading;
-    </script>
 </head>
 <body>
-    <div id="loading">Loading...</div>
+    <div class="navbar">
+        <a href="/">Home</a>
+    </div>
     <div class="container">
         <div class="results-section">
             <h1>Search Results</h1>
@@ -74,8 +47,6 @@
 
             <h2>Sharpe Ratio:</h2>
             <p>{{ "%.2f"|format(sharpe_ratio) }}</p>
-            
-            <a href="/">Back to Search</a>
         </div>
         <div class="graph-section">
             <h2>Daily Average Price Graph</h2>
@@ -85,8 +56,6 @@
 
     <script>
         window.onload = function() {
-            hideLoading();
-
             const ctx = document.getElementById('daily-prices-chart').getContext('2d');
             const labels = Object.keys({{ daily_prices|tojson }});
             const dataPoints = Object.values({{ daily_prices|tojson }});
